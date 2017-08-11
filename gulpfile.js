@@ -1,4 +1,4 @@
-var gulp           = require('gulp'),
+var 	gulp           = require('gulp'),
 		gutil          = require('gulp-util' ),
 		sass           = require('gulp-sass'),
 		browserSync    = require('browser-sync'),
@@ -11,7 +11,7 @@ var gulp           = require('gulp'),
 		cache          = require('gulp-cache'),
 		autoprefixer   = require('gulp-autoprefixer'),
 		ftp            = require('vinyl-ftp'),
-    	sourcemaps   = require('gulp-sourcemaps'),
+    	sourcemaps     = require('gulp-sourcemaps'),
 		notify         = require("gulp-notify");
 
 // Скрипты проекта

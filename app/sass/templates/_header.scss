@@ -9,6 +9,11 @@ h1 {
   text-align: center;
   background-image: url(../img/cat.gif);
   color: $white;
+  cursor: pointer;
+
+  @include hover {
+    color: $flat-amethyst;
+  }
 
 }
 
