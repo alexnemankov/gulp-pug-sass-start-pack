@@ -12,7 +12,8 @@ var 	gulp           = require('gulp'),
 		autoprefixer   = require('gulp-autoprefixer'),
 		ftp            = require('vinyl-ftp'),
     	sourcemaps     = require('gulp-sourcemaps'),
-		notify         = require("gulp-notify");
+		notify         = require("gulp-notify"),
+		pug 		   = require('gulp-pug');
 
 // Скрипты проекта
 
@@ -30,10 +31,10 @@ gulp.task('js', ['common-js'], function() {
 		'app/libs/jquery/dist/jquery.min.js',
 		'app/libs/magnific-popup/jquery.magnific-popup.min.js',
 		'app/libs/slick/slick.min.js',
-		'app/js/common.min.js', // Всегда в конце
+		'app/js/common.min.js', // always in the end
 		])
 	.pipe(concat('scripts.min.js'))
-	.pipe(uglify()) // Минимизировать весь js (на выбор)
+	.pipe(uglify()) // minified JS (optional)
 	.pipe(gulp.dest('app/js'))
 	.pipe(browserSync.reload({stream: true}));
 });
@@ -55,13 +56,25 @@ gulp.task('sass', function() {
 	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(autoprefixer(['last 15 versions']))
-	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
+	.pipe(cleanCSS()) // optional
 	.pipe(sourcemaps.write())
 	.pipe(gulp.dest('app/css'))
 	.pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
+gulp.task('pug', function() {
+    return gulp.src('app/pages/**/*.pug')
+
+
+        .pipe(pug({
+            pretty: true //Remove if you need minified html
+        }))
+        .pipe(gulp.dest("app/"));
+
+});
+
+gulp.task('watch', ['pug','sass', 'js', 'browser-sync'], function() {
+	gulp.watch('app/pages/**/*.pug', ['pug'], browserSync.reload);
 	gulp.watch('app/sass/**/*.scss', ['sass']);
 	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
 	gulp.watch('app/*.html', browserSync.reload);
@@ -73,7 +86,7 @@ gulp.task('imagemin', function() {
 	.pipe(gulp.dest('dist/img')); 
 });
 
-gulp.task('build', ['removedist', 'imagemin', 'sass', 'js'], function() {
+gulp.task('build', ['removedist', 'imagemin','pug', 'sass', 'js'], function() {
 
 	var buildFiles = gulp.src([
 		'app/*.html',
